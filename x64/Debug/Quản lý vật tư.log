@@ -1,0 +1,6 @@
+﻿  dsNhanVien.cpp
+E:\My Project\Completed\dsNhanVien.cpp(388,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+E:\My Project\Completed\dsNhanVien.cpp(285,7): warning C4101: 'signal': unreferenced local variable
+E:\My Project\Completed\dsNhanVien.cpp(844,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+E:\My Project\Completed\dsNhanVien.cpp(1324,6): warning C4101: 'event': unreferenced local variable
+  Quản lý vật tư.vcxproj -> E:\My Project\Completed\x64\Debug\Quản lý vật tư.exe
