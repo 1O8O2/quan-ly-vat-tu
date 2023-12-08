@@ -25,12 +25,12 @@ string menu_func[Max_item] = { "Danh sach vat tu",
 string ContentNV[4] = { "Ma nhan vien", "              Ho", "             Ten", " Phai" };
 string ContentVT[4] = { "  Ma vat tu", "         Ten vat tu","        Don vi tinh", " SL ton" };
 string ContentHD[4] = { "So hoa don", "Ngay lap HD", "Ma nhan vien", "Loai" };
-string ContentCTHD[5] = { "Ma vat tu", "Ten vat tu", "So luong", "Don gia", "% VAT"};
+string ContentCTHD[5] = { "Ma vat tu", "Ten vat tu", "So luong", "Don gia", "% VAT" };
 string ButtonFunc[2] = { "    Them vat tu", "  Xac Nhan & Thoat" };
-string HDInPeriod[5] = {"So hoa don", "Ngay lap", "Loai HD", "Ho ten nhan vien", "Tri gia"};
+string HDInPeriod[5] = { "So hoa don", "Ngay lap", "Loai HD", "Ho ten nhan vien", "Tri gia" };
 string StatisticRevenue[1] = { "Nhap nam thong ke" };
 string TopRevenue[2] = { "Tu ngay", "Den ngay" };
-string ContentTopRevenue[4] = { "Top", "Ma vat tu", "Ten vat tu", "Doanh thu"};
+string ContentTopRevenue[4] = { "Top", "Ma vat tu", "Ten vat tu", "Doanh thu" };
 string ContentTK[6] = { "Ma nhan vien", "              Ho", "             Ten", "   So hoa don", "  Ngay lap HD", "     Loai" };
 
 
@@ -445,62 +445,11 @@ void Notification(string nd) {
 	ShowCur(1);
 }
 
-void NotificationTK() {
-	//SetColor(6);
-	ShowCur(0);
-	gotoxy(X_NotificationTK + 20, Y_NotificationTK);
-	cout << "THONG BAO";
-	for (int ix = X_NotificationTK; ix <= X_NotificationTK + 50; ix++) {
-		//ve hang tren thu nhat
-		gotoxy(ix, Y_NotificationTK - 2);
-		cout << char(205);
-
-		//ve hang tren thu hai
-		gotoxy(ix, Y_NotificationTK + 2);
-		cout << char(205);
-
-
-		//ve hang duoi
-		gotoxy(ix, Y_NotificationTK + 6);
-		cout << char(205);
-	}
-
-	for (int iy = Y_NotificationTK - 2; iy <= Y_NotificationTK + 6; iy++) {
-		//ve cot dau tien
-		gotoxy(X_NotificationTK, iy);
-		cout << char(186);
-
-		//ve cot cuoi cung
-		gotoxy(X_NotificationTK + 50, iy);
-		cout << char(186);
-	}
-
-	//dieu chinh cac goc
-	gotoxy(X_NotificationTK, Y_NotificationTK - 2);
-	cout << char(201);
-	gotoxy(X_NotificationTK, Y_NotificationTK + 6);
-	cout << char(200);
-	gotoxy(X_NotificationTK + 50, Y_NotificationTK - 2);
-	cout << char(187);
-	gotoxy(X_NotificationTK + 50, Y_NotificationTK + 6);
-	cout << char(188);
-}
-
 //------------ xoa bang thong bao -----------
 void DeleteNotification() {
 	NormalLine();
 	for (int i = 140; i <= 190; i++) {
 		for (int j = 38; j <= 46; j++) {
-			gotoxy(i, j);
-			cout << " ";
-		}
-	}
-}
-
-void DeleteNotificationTK() {
-	NormalLine();
-	for (int i = 180; i <= 230; i++) {
-		for (int j = 5; j <= 46; j++) {
 			gotoxy(i, j);
 			cout << " ";
 		}
@@ -706,7 +655,7 @@ int PrintOrUpdate(int index) {
 			}
 			break;
 		case ESC:
-			return 0;
+			return -1;
 		case ENTER:
 			NormalLine();
 			return pick; //luu lua chon de thuc hien chuc nang 

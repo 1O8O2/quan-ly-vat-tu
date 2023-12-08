@@ -47,8 +47,6 @@ hoa_donTK_Node* MakeHdTkNode(hoa_don data, string maNV, string ho, string ten) {
 	temp->data.ten = ten;
 	temp->data.maNV = maNV;
 
-
-
 	temp->next = NULL;
 	return temp;
 }
@@ -452,10 +450,12 @@ int PickFuncHD(Vt_Node root, hd_Node* temp, int CurHDPage, int TotalHDPage) {
 void DrawTablePickHD() {
 	gotoxy(X_Title + 55, Y_Title);
 	cout << "Chon hoa don";
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 2; i++) {
 		gotoxy(xKeyContentHD[i] + 3, Y_Display);
 		cout << ContentHD[i];
 	}
+	gotoxy(xKeyContentHD[2] + 3, Y_Display);
+	cout << ContentHD[3];
 	for (int ix = 120; ix <= 180; ix++) {
 		gotoxy(ix, Y_Display - 2);
 		cout << char(220);

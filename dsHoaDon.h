@@ -49,7 +49,6 @@ struct ds_hoa_donTK {
 	int n_hdtk = 0;
 };
 
-
 void Init_hd(hoa_don& hd);
 hd_Node* MakeHdNode(hoa_don data);
 void AddLastListHD(ds_hoa_don*& dshd, hoa_don hd);

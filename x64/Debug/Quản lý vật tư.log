@@ -1,6 +1,20 @@
-﻿  dsNhanVien.cpp
-E:\My Project\Completed\dsNhanVien.cpp(388,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-E:\My Project\Completed\dsNhanVien.cpp(285,7): warning C4101: 'signal': unreferenced local variable
-E:\My Project\Completed\dsNhanVien.cpp(844,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-E:\My Project\Completed\dsNhanVien.cpp(1324,6): warning C4101: 'event': unreferenced local variable
-  Quản lý vật tư.vcxproj -> E:\My Project\Completed\x64\Debug\Quản lý vật tư.exe
+﻿  Constrain.cpp
+C:\Projects\Completed\Constrain.cpp(11,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Projects\Completed\Constrain.cpp(60,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Projects\Completed\Constrain.cpp(160,13): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Projects\Completed\Constrain.cpp(359,11): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  dsChiTietHoaDon.cpp
+  dsHoaDon.cpp
+C:\Projects\Completed\dsHoaDon.cpp(124,23): warning C4244: 'return': conversion from 'double' to 'int', possible loss of data
+  dsNhanVien.cpp
+C:\Projects\Completed\dsNhanVien.cpp(390,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Projects\Completed\dsNhanVien.cpp(285,7): warning C4101: 'signal': unreferenced local variable
+C:\Projects\Completed\dsNhanVien.cpp(845,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Projects\Completed\dsNhanVien.cpp(1047,6): warning C4101: 'event': unreferenced local variable
+  dsVatTu.cpp
+  Main.cpp
+  mylib.cpp
+  ProcessionFile.cpp
+  UserInterface.cpp
+  Generating Code...
+  Quản lý vật tư.vcxproj -> C:\Projects\Completed\x64\Debug\Quản lý vật tư.exe

@@ -271,8 +271,9 @@ void ShowVt(vat_tu vt, int pos) {
 }
 
 //---------- in thong tin vat tu tren 1 trang ---------
-void ShowListVtOnePage(Vt_Node root, int StartIndex, int CurVtPage, int TotalVtPage) {  //*sua lai mang dong
-	Vt_Node VtNodeList[Max_itemVt];
+void ShowListVtOnePage(Vt_Node root, int StartIndex, int CurVtPage, int TotalVtPage) { 
+	// Khai bao 1 mang dong
+	Vt_Node* VtNodeList = new Vt_Node[Max_itemVt];
 	int index = 0;
 	UpdateArrVtList(root, VtNodeList, index);
 
@@ -287,6 +288,10 @@ void ShowListVtOnePage(Vt_Node root, int StartIndex, int CurVtPage, int TotalVtP
 	RemoveExceedMember(i, 4);
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurVtPage << "/" << TotalVtPage;
+
+	//Giai phong bo nho
+	delete[] VtNodeList;
+
 }
 
 //---------- thay doi trang in vat tu ----------
@@ -298,7 +303,7 @@ void ChangeVtManagerPage(Vt_Node root, int CurVtPage, int TotalVtPage) {
 
 Vt_Node PickItemVt(Vt_Node root, int& pick, int& CurVtPage, int& TotalVtPage) {
 	ShowCur(0);
-	Vt_Node VtNodeList[Max_itemVt];
+	Vt_Node* VtNodeList = new Vt_Node[Max_itemVt];
 	int sl = 0;
 	UpdateArrVtList(root, VtNodeList, sl);
 
@@ -373,13 +378,17 @@ Vt_Node PickItemVt(Vt_Node root, int& pick, int& CurVtPage, int& TotalVtPage) {
 				ShowVt(VtNodeList[pick]->data, index);
 			}
 			break;
-		case ENTER:
+		case ENTER: {
 			NormalLine();
 			DeleteArrow(5, Y_Display + 4 + index * 4);
-			return VtNodeList[pick]; //luu lua chon de thuc hien chuc nang ham Menu
+			Vt_Node vt = VtNodeList[pick];
+			delete[] VtNodeList;
+			return vt; //luu lua chon de thuc hien chuc nang ham Menu
+		}
 		case ESC:
 			NormalLine();
 			DeleteArrow(5, Y_Display + 4 + index * 4);
+			delete[] VtNodeList;
 			return NULL;
 		}
 	}
@@ -454,6 +463,7 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 				//truong hop vat tu da nam trong hoa don
 				if (DeleteNode->data.used) {
 					Notification("Vat tu da o trong hoa don. Khong the xoa!");
+					ShowListVtOnePage(root, (CurVtPage - 1) * NumberPerPage, CurVtPage, TotalVtPage);
 					return;
 				}
 
@@ -464,6 +474,7 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 				//truong hop user chon no
 				if (target == 2) {
 					NormalLine();
+					pick = pick % 10;
 					ShowVt(DeleteNode->data, pick);
 					return;
 				}
@@ -506,6 +517,10 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 		case 2: //nhap ten vat tu
 			cur_step = step;
 			TypeWordAndSpace(vt_ten, step, Edited, Saved, 30, 5);
+			if (!Saved) {
+				RemoveFormComplete(4);
+				return;
+			}
 			if (cur_step != step) {
 				break;
 			}
@@ -518,6 +533,10 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 		case 3: //nhap don vi tinh
 			cur_step = step;
 			TypeWordAndNumber(vt_dvt, step, Edited, Saved, 10, 5);
+			if (!Saved) {
+				RemoveFormComplete(4);
+				return;
+			}
 			if (cur_step != step) {
 				break;
 			}
@@ -533,7 +552,11 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 				break;
 			}
 			cur_step = step;
-			TypeOnlyNumber(vt_slton, step, Edited, Saved, 1000000, 5,false);
+			TypeOnlyNumber(vt_slton, step, Edited, Saved, 1000000, 5);
+			if (!Saved) {
+				RemoveFormComplete(4);
+				return;
+			}
 			if (cur_step != step) {
 				break;
 			}
@@ -671,16 +694,6 @@ void DisplayAscendingNV(Vt_Node temp_ds[], int sl, int CurVtPageAscending, int T
 	cout << " Quan ly vat tu ";
 }
 
-void quickSort(Vt_Node temp_ds[], int left, int right) {
-	if (left < right) {
-		int pivotIndex = partition(temp_ds, left, right);
-
-		//Sap xep cac phan tu truoc va sau pivot
-		quickSort(temp_ds, left, pivotIndex - 1);
-		quickSort(temp_ds, pivotIndex + 1, right);
-	}
-}
-
 int partition(Vt_Node temp_ds[], int left, int right) {
 	Vt_Node pivot = temp_ds[right];
 	int i = (left - 1);  //Chi so cua phan tu <= pivot
@@ -701,9 +714,19 @@ int partition(Vt_Node temp_ds[], int left, int right) {
 	return i + 1;
 }
 
+void quickSort(Vt_Node temp_ds[], int left, int right) {
+	if (left < right) {
+		int pivotIndex = partition(temp_ds, left, right);
+
+		//Sap xep cac phan tu truoc va sau pivot
+		quickSort(temp_ds, left, pivotIndex - 1);
+		quickSort(temp_ds, pivotIndex + 1, right);
+	}
+}
+
 //------ in danh sach vat tu tang dan theo ten -------
 void PrintListVT(Vt_Node root) {
-	Vt_Node temp_ds[Max_itemVt];
+	Vt_Node* temp_ds = new Vt_Node[Max_itemVt];
 	int temp_sl = 0;
 	UpdateArrVtList(root, temp_ds, temp_sl);
 
@@ -729,6 +752,7 @@ void PrintListVT(Vt_Node root) {
 		while (_kbhit()) {
 			c = _getch();
 			if (c == ESC) {
+				delete[] temp_ds;
 				return;
 			}
 			if (c == 224) {

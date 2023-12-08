@@ -40,18 +40,16 @@ int PickNVMakeHD(dsNV ds, int CurNVPage, int TotalNVPage);
 void DisplayMenuDSHD(nhan_vien* nv, hd_Node* temp, Vt_Node root, int CurHDPage, int TotalHDPage);
 void MenuManagerHD(dsNV& ds, Vt_Node& root);
 
+void DisplayTK(string ct[], int sl, bool used);
+void ShowHDTK(hoa_donTK  hdtk, int pos);
+void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, int TotalHDPage, date ngay1, date ngay2);
+void CheckNgayNV(dsNV& ds, date ngay1, date ngay2, int i, ds_hoa_donTK*& dstk);
+void ThongKeHD(dsNV ds);
+
 void DisplayPrintingHD(nhan_vien* nv, hd_Node* hd, Vt_Node root, int CurCTHDPage, int TotalCTHDPage);
 void CheckingHD(dsNV ds, Vt_Node root);
 
-void InputDateForTopRevenue(date& date1, date& date2);
+void InputDateForTopRevenue(date& date1, date& date2, bool& Saved);
 void DisplayTopRevenue(dsNV ds, Vt_Node root);
 
 void DisplayStatisticRevenue(dsNV ds);
-
-void DisplayTK(string ct[], int sl, bool used);
-//bool checkPeriod(date d1, date d2, date d3);
-void ShowHDTK(hoa_donTK  hdtk, int pos);
-void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, int TotalHDPage, date ngay1, date ngay2);
-void ChangeHDTKManagerPage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDTKPage, int TotalHDTKPage, date ngay1, date ngay2);
-void CheckNgayNV(dsNV& ds, date ngay1, date ngay2, int i, ds_hoa_donTK*& dstk);
-void ThongKeHD(dsNV ds);
