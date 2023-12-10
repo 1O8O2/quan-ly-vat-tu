@@ -75,6 +75,8 @@ void ShowListNVOnePage(dsNV ds, int index, int CurNVPage, int TotalNVPage) {
 		ShowNV(ds.dsnv[i + index], i);
 	}
 	RemoveExceedMember(i, 4);
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurNVPage << "/" << TotalNVPage;
 }
@@ -95,8 +97,10 @@ void ShowListNVOnePageAscending(nhan_vien* ds[], int sl, int index, int CurNVPag
 		ShowNV(ds[i + index], i);
 	}
 	RemoveExceedMember(i, 4);
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
-	cout << " Trang " << CurNVPageAscending << "/" << TotalNVPageAscending;
+	cout << "Trang " << CurNVPageAscending << " / " << TotalNVPageAscending;
 }
 
 //---------- thay doi trang in nhan vien tang dan ----------
@@ -350,6 +354,8 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 					Notification("Xoa thanh cong!");
 				}
 				TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
+				if (CurNVPage > TotalNVPage)
+					CurNVPage--;
 				ChangeNVManagerPage(ds, CurNVPage, TotalNVPage);
 				return;
 			}
@@ -789,9 +795,6 @@ void MenuManagerHD(dsNV& ds, Vt_Node& root) {
 			TotalHDPage = 1;
 		DisplayMenuDSHD(ds.dsnv[index], hd, root, CurHDPage, TotalHDPage);
 		int idx_func = PickFuncHD(root, hd, CurHDPage, TotalHDPage);
-		if (idx_func == -1) {
-			return;
-		}
 		while (idx_func == 0) {
 			system("cls");
 			int pick = 0;
@@ -807,8 +810,9 @@ void MenuManagerHD(dsNV& ds, Vt_Node& root) {
 				break;
 			}
 		}
-		while (idx_func == 1) {
-			return;
+		if (idx_func == 1) {
+			if (hd->data.dscthd->n_cthd != 0)
+				return;
 		}
 	}
 }
@@ -996,6 +1000,9 @@ void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, i
 		ShowHDTK(hdtk_temp->data, i);
 		hdtk_temp = hdtk_temp->next;
 	}
+	RemoveExceedMemberTK(i, 6);
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurHDPage << "/" << TotalHDPage;
 }
@@ -1135,13 +1142,13 @@ void ThongKeHD(dsNV ds) {
 		case PAGE_UP:
 			if (CurHDPage > 1) {
 				CurHDPage--;
-				ShowListHDTKOnePage(dstk, 0, (CurHDPage - 1) * NumberPerPage, TotalHDPage, ngay1, ngay2);
+				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage, ngay1, ngay2);
 			}
 			break;
 		case PAGE_DOWN:
 			if (CurHDPage < TotalHDPage) {
 				CurHDPage++;
-				ShowListHDTKOnePage(dstk, 0, (CurHDPage - 1) * NumberPerPage, TotalHDPage, ngay1, ngay2);
+				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage, ngay1, ngay2);
 			}
 			break;
 		case ESC:
@@ -1323,7 +1330,7 @@ void DisplayTopRevenue(dsNV ds, Vt_Node root) {
 		cout << TopRevenue[i]->cthd->maVT;
 		gotoxy(xKeyContentNV[2] + 5, 12 + i * 4);
 		cout << vt->data.ten_vt;
-		gotoxy(xKeyContentNV[3] + 5, 12 + i * 4);
+		gotoxy(xKeyContentNV[3] + 2, 12 + i * 4);
 		cout << addDot(TopRevenue[i]->revenue);
 	}
 	

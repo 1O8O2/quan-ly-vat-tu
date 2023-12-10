@@ -30,3 +30,4 @@ void DrawBorderFuncNV(int x, int y, int length, int height);
 int PrintOrUpdate(int index);
 void DrawTableStatisticRevenue();
 void DrawTableTopRevenue();
+void RemoveExceedMemberTK(int cnt, int sl);

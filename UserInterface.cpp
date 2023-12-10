@@ -555,6 +555,19 @@ void RemoveExceedMember(int cnt, int sl) {
 	}
 }
 
+void RemoveExceedMemberTK(int cnt, int sl) {
+	if (cnt < NumberPerPage) {
+		for (int i = cnt; i < NumberPerPage; i++) {
+			for (int j = 0; j < sl; j++) {
+				for (int k = xKeyContentTK[j] + 3; k < xKeyContentTK[j + 1]; k++) {
+					gotoxy(k, Y_Display + 4 + i * 4);
+					cout << " ";
+				}
+			}
+		}
+	}
+}
+
 //--------- tao 1 bang nhap thong tin --------
 void CreateInputForm(string ct[], int sl, int length) {
 	ShowCur(1);

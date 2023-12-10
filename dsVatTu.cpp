@@ -22,7 +22,7 @@ Vt_Node MakeVtNode(vat_tu vt) {
 	newNode->data = vt;
 	newNode->left = NULL;
 	newNode->right = NULL;
-	newNode->height = 0;
+	newNode->height = 1;
 	return newNode;
 }
 
@@ -286,6 +286,8 @@ void ShowListVtOnePage(Vt_Node root, int StartIndex, int CurVtPage, int TotalVtP
 		ShowVt(VtNodeList[i + StartIndex]->data, i);
 	}
 	RemoveExceedMember(i, 4);
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurVtPage << "/" << TotalVtPage;
 
@@ -484,6 +486,8 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 				}
 
 				TotalVtPage = (int)ceil((double)CountVtNode(root) / NumberPerPage);
+				if (CurVtPage > TotalVtPage)
+					CurVtPage--;
 				ChangeVtManagerPage(root, CurVtPage, TotalVtPage);
 				return;
 			}
@@ -649,6 +653,7 @@ void MenuManageVT(Vt_Node& root) {
 						return;
 					}
 					InputVt(root, false, true, CurVtPage, TotalVtPage);
+					ShowCur(0);
 				}
 				else if (event == HOME) {
 					if (CountVtNode(root) == 0) {
@@ -672,6 +677,8 @@ void ShowListVtOnePageAscending(Vt_Node ds[], int StartIndex, int sl, int CurVtP
 		ShowVt(ds[i + StartIndex]->data, i);
 	}
 	RemoveExceedMember(i, 4);
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurVtPageAscending << "/" << TotalVtPageAscending;
 }

@@ -332,6 +332,8 @@ void ShowListCTHDOnePage(hd_Node* temp, Vt_Node root, int StartIndex, int CurHDP
 		ShowCTHD(cthd_temp, root, i);
 		cthd_temp = cthd_temp->next;
 	}
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurHDPage << "/" << TotalHDPage;
 }
@@ -377,6 +379,8 @@ void ShowListCTHDOnePageWithValue(hd_Node* temp, Vt_Node root, int StartIndex, i
 		ShowCTHDWithValue(cthd_temp, root, i);
 		cthd_temp = cthd_temp->next;
 	}
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurCTHDPage << "/" << TotalCTHDPage;
 }
@@ -439,9 +443,6 @@ int PickFuncHD(Vt_Node root, hd_Node* temp, int CurHDPage, int TotalHDPage) {
 		case ENTER:
 			NormalLine();
 			return pointer;
-		case ESC:
-			NormalLine();
-			return -1;
 		}
 	}
 }
@@ -512,6 +513,8 @@ void ShowListHDOnePage(ds_hoa_don* dshd, int index, int CurHDPage, int TotalHDPa
 		ShowHD(hd_temp->data, i);
 		hd_temp = hd_temp->next;
 	}
+	gotoxy(X_Page + 6, Y_Page);
+	cout << "          ";
 	gotoxy(X_Page, Y_Page);
 	cout << " Trang " << CurHDPage << "/" << TotalHDPage;
 }

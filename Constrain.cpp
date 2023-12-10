@@ -210,6 +210,8 @@ void TypeDate(int& result, int& step, bool& Saved, int LimitReach, int distance,
 	int number = result;
 	gotoxy(X_Add + distance, Y_Add + (step - 1) * 4);
 	if (result != 0) {
+		if (result <= 9)
+			cout << "0";
 		cout << result;
 	}
 	int num = result;
@@ -269,6 +271,8 @@ void TypeDoubleNumber(double& result, int &step, bool& Saved, double Limit_numbe
 	int cnt = 0, temp = 0;
 	double number = result;
 	gotoxy(X_Add + distance, Y_Add + (step - 1) * 4);
+	if (result != 0)
+		cout << result;
 	int event;
 	bool decimalPointEntered = false;
 

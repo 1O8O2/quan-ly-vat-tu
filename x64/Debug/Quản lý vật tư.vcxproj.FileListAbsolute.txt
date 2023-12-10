@@ -1,1 +1,1 @@
-C:\Projects\Completed\x64\Debug\Quản lý vật tư.exe
+E:\My Project\Completed\x64\Debug\Quản lý vật tư.exe
