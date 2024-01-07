@@ -22,7 +22,7 @@ struct ds_chi_tiet_hd {
 };
 
 struct cthd_with_val {
-	chi_tiet_hd* cthd;
+	chi_tiet_hd cthd;
 	int revenue = 0;
 };
 

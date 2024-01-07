@@ -36,6 +36,7 @@ struct hoa_donTK {
 	string maNV;
 	string ho;
 	string ten;
+	ds_chi_tiet_hd* dscthd = new ds_chi_tiet_hd;
 };
 
 struct hoa_donTK_Node {
@@ -54,7 +55,7 @@ hd_Node* MakeHdNode(hoa_don data);
 void AddLastListHD(ds_hoa_don*& dshd, hoa_don hd);
 void InputFormHD(string ct[], int sl, int length);
 hd_Node* FindSoHDExist(ds_hoa_don* dshd, string ID);
-int ComputeValue(int sl, double donGia, double VAT);
+double ComputeValue(int sl, double donGia, double VAT);
 int PickHDType();
 void ButtonFunction();
 void TableOfHD();

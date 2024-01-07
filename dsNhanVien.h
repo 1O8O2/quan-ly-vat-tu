@@ -12,7 +12,7 @@ struct nhan_vien {
 	string ho;
 	string ten;
 	string phai;
-	bool used = false;
+	bool used = false; //da xuat hien trong hoa don hay chua
 	ds_hoa_don* dshd = new ds_hoa_don;
 };
 

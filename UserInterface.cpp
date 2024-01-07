@@ -11,7 +11,7 @@ int xKeyContentVT[5] = { 12, 30, 65, 100, 113 };
 int xKeyContentHD[4] = { 120, 140, 160, 180 };
 int xKeyButton[4] = { 20, 50, 140, 170 };
 int xKeyContentCTHD[7] = { 82, 102, 132, 147, 162, 177, 187 };
-int xKeyContentTK[8] = { 12, 30, 65, 100, 120, 140, 160, 180 };
+int xKeyContentTK[8] = { 12, 30, 65, 85, 104, 124, 134, 154 };
 
 string menu_func[Max_item] = { "Danh sach vat tu",
 							   "Danh sach nhan vien",
@@ -31,7 +31,7 @@ string HDInPeriod[5] = { "So hoa don", "Ngay lap", "Loai HD", "Ho ten nhan vien"
 string StatisticRevenue[1] = { "Nhap nam thong ke" };
 string TopRevenue[2] = { "Tu ngay", "Den ngay" };
 string ContentTopRevenue[4] = { "Top", "Ma vat tu", "Ten vat tu", "Doanh thu" };
-string ContentTK[6] = { "Ma nhan vien", "              Ho", "             Ten", "   So hoa don", "  Ngay lap HD", "     Loai" };
+string ContentTK[6] = { "So hoa don", "              Ho", "      Ten", "Ngay lap HD", "  Tri Gia", "Loai"};
 
 
 void NormalLine() {
@@ -440,10 +440,11 @@ void Notification(string nd) {
 
 	gotoxy(X_Notification + 2, Y_Notification + 4);
 	cout << nd;
-	Sleep(1000);
+	Sleep(2000);
 	DeleteNotification();
 	ShowCur(1);
 }
+ 
 
 //------------ xoa bang thong bao -----------
 void DeleteNotification() {

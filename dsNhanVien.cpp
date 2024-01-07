@@ -66,8 +66,9 @@ void ShowNV(nhan_vien *nv, int pos) {
 
 //---------- in thong tin nhan vien tren 1 trang ---------
 void ShowListNVOnePage(dsNV ds, int index, int CurNVPage, int TotalNVPage) {
-	gotoxy(X_DisplayNum + 28, Y_DisplayNum);
-	cout << "         ";
+	if (index < 0) index = 0;
+	gotoxy(X_DisplayNum + 20, Y_DisplayNum);
+	cout << "          ";
 	gotoxy(X_DisplayNum, Y_DisplayNum);
 	cout << "So luong nhan vien: " << ds.n_nv;
 	int i;
@@ -90,6 +91,7 @@ void ChangeNVManagerPage(dsNV ds, int CurNVPage, int TotalNVPage) {
 
 //--------- in thong tin nhan vien theo thu tu ten tang dan ------------
 void ShowListNVOnePageAscending(nhan_vien* ds[], int sl, int index, int CurNVPageAscending, int TotalNVPageAscending) {
+	if (index < 0) index = 0;
 	gotoxy(X_DisplayNum, Y_DisplayNum);
 	cout << "So luong nhan vien: " << sl;
 	int i;
@@ -117,19 +119,24 @@ void DisplayAscendingNV(nhan_vien* ds[], int sl, int CurNVPageAscending, int Tot
 	system("cls");
 
 	Display(ContentNV, sizeof(ContentNV) / sizeof(string), false);
-	ShowListNVOnePageAscending(ds, sl, (CurNVPageAscending - 1) * NumberPerPage, CurNVPageAscending, TotalNVPageAscending);	gotoxy(X_Title, Y_Title);
+	ShowListNVOnePageAscending(ds, sl, (CurNVPageAscending - 1) * NumberPerPage, CurNVPageAscending, TotalNVPageAscending);	
+	gotoxy(X_Title, Y_Title);
 	cout << " Quan ly nhan vien ";
 }
 
 //--------- in danh sach nhan vien theo thu tu ten tang dan -----
 void PrintListNV(dsNV ds) {
-	int CurNVPageAscending = 1;
 	int TotalNVPageAscending = (int)ceil((double)ds.n_nv / NumberPerPage);
+	int CurNVPageAscending = (TotalNVPageAscending != 0);
 
-	nhan_vien* temp_ds[Max_NV];
+	nhan_vien** temp_ds = new nhan_vien*[Max_NV];
 	int temp_sl = ds.n_nv;
 	for (int i = 0; i < temp_sl; i++) {
-		temp_ds[i] = ds.dsnv[i];
+		temp_ds[i] = new nhan_vien;
+		temp_ds[i]->maNV = ds.dsnv[i]->maNV;
+		temp_ds[i]->ho = ds.dsnv[i]->ho;
+		temp_ds[i]->ten = ds.dsnv[i]->ten;
+		temp_ds[i]->phai = ds.dsnv[i]->phai;
 	}
 	for (int i = 0; i < temp_sl; i++) {
 		for (int j = i + 1; j < temp_sl; j++) {
@@ -155,6 +162,10 @@ void PrintListNV(dsNV ds) {
 		while (_kbhit()) {
 			c = _getch();
 			if (c == ESC) {
+				for (int i = 0; i < temp_sl; i++) {
+					delete temp_ds[i];
+				}
+				delete[] temp_ds;
 				return;
 			}
 			if (c == 224) {
@@ -346,7 +357,7 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 					ShowNV(ds.dsnv[idx], IndexNv);
 					return;
 				}
-				if (!IsDeleteNVSuccess(ds, FindIndexNV(ds, ds.dsnv[IndexNv]->maNV))) {
+				if (!IsDeleteNVSuccess(ds, IndexNv)) {
 					Notification("Xoa khong thanh cong!");
 					ShowCur(1);
 				}
@@ -354,6 +365,7 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 					Notification("Xoa thanh cong!");
 				}
 				TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
+
 				if (CurNVPage > TotalNVPage)
 					CurNVPage--;
 				ChangeNVManagerPage(ds, CurNVPage, TotalNVPage);
@@ -370,10 +382,6 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 				return;
 			}
 			target = FindIndexNV(ds, ID);
-			if (ID == "") {
-				Notification("Ma nhan vien khong duoc phep rong!");
-				break;
-			}
 			//Kiem tra truong hop ma nhan vien da ton tai
 			if (target != -1) {
 				Notification("Ma nhan vien da ton tai!");
@@ -389,9 +397,9 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 			if (cur_step != step) {
 				break;
 			}
-			if (ho_ten == "") {
-				Notification("Ho va ten khong duoc phep rong!");
-				break;
+			if (!Saved) {
+				RemoveFormComplete(3);
+				return;
 			}
 			for (int i = ho_ten.length() - 1; i >= 0; i--) {
 				if (ho_ten[i] == ' ') {
@@ -409,9 +417,9 @@ void inputNV(dsNV& ds, bool Edited, bool Deleted, int& CurNVPage, int& TotalNVPa
 			if (cur_step != step) {
 				break;
 			}
-			if (nv_phai == "") {
-				Notification("Gioi tinh khong duoc phep rong!");
-				break;
+			if (!Saved) {
+				RemoveFormComplete(3);
+				return;
 			}
 			step++;
 			break;
@@ -462,8 +470,8 @@ void MenuManageNV(dsNV& ds) {
 	system("color 0E");
 	ShowCur(0);
 	system("cls");
-	int CurNVPage = 1;
 	int TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
+	int CurNVPage = (TotalNVPage != 0);
 	Display(ContentNV, sizeof(ContentNV) / sizeof(string), true);
 	ShowListNVOnePage(ds, 0, CurNVPage, TotalNVPage);
 	gotoxy(X_Title, Y_Title);
@@ -478,6 +486,7 @@ void MenuManageNV(dsNV& ds) {
 			if (event == 224) {
 				event = _getch();//lay cac ki tu dac biet
 				if (event == PAGE_UP && CurNVPage > 1) {
+					TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
 					CurNVPage--;
 					ChangeNVManagerPage(ds, CurNVPage, TotalNVPage);
 				}
@@ -548,10 +557,6 @@ int InputHD(nhan_vien*& nv) {
 				return 0;
 			}
 			target = FindSoHDExist(nv->dshd, hd.soHD);
-			if (hd.soHD == "") {
-				Notification("So hoa don khong duoc phep rong!");
-				break;
-			}
 			//Kiem tra truong hop so hoa don da ton tai
 			if (target != NULL) {
 				Notification("So hoa don da ton tai!");
@@ -568,9 +573,8 @@ int InputHD(nhan_vien*& nv) {
 			if (cur_step != step) {
 				break;
 			}
-			if (hd.ngay_lapHD.ngay == 0) {
-				Notification("Ngay lap hoa don khong duoc rong");
-				break;
+			if (!Saved) {
+				return 0;
 			}
 			step++;
 			break;
@@ -582,9 +586,8 @@ int InputHD(nhan_vien*& nv) {
 				step--;
 				break;
 			}
-			if (hd.ngay_lapHD.thang == 0) {
-				Notification("Thang lap hoa don khong duoc rong");
-				break;
+			if (!Saved) {
+				return 0;
 			}
 			step++;
 			break;
@@ -597,19 +600,20 @@ int InputHD(nhan_vien*& nv) {
 				step--;
 				break;
 			}
-			if (hd.ngay_lapHD.nam == 0) {
-				Notification("Nam lap hoa don khong duoc rong");
-				break;
-			}
 			if (!CheckValidDate(hd.ngay_lapHD, step - 2)) {
 				step = 2;
 				break;
+			}
+			if (!Saved) {
+				return 0;
 			}
 			step++;
 			break;
 		}
 		case 5: {//Nhap loai hoa don
-			(PickHDType() == 1) ? hd.loai = 'N' : hd.loai = 'X';
+			int pick = PickHDType();
+			if (!pick) return 0;
+			(pick == 1) ? hd.loai = 'N' : hd.loai = 'X';
 			step++;
 			break;
 		}
@@ -649,19 +653,15 @@ int InputCTHD(Vt_Node& root, nhan_vien*& nv, Vt_Node vt, hd_Node* temp) {
 			break;
 		case 3: //Nhap so luong vat tu
 			cur_step = step;
-			TypeOnlyNumber(cthd.sl, step, false, Saved, 1000000, 5);
+			TypeOnlyNumber(cthd.sl, step, false, Saved, 5, 5);
 			if (cur_step != step) {
 				break;
 			}
 			if (!Saved) {
 				return 0;
 			}
-			if (cthd.sl == 0) {
-				Notification("So luong vat tu khong duoc rong!");
-				break;
-			}
 			if (temp->data.loai == 'X' && dsvt_vt->data.sl_ton < cthd.sl) {
-				string s = "So luong ton khong du. Hien chi con " +  to_string(dsvt_vt->data.sl_ton) + " san pham";
+				string s = "So luong ton khong du. Hien chi con " + to_string(dsvt_vt->data.sl_ton) + " san pham";
 				Notification(s);
 
 				gotoxy(X_Add + 5, Y_Add + 8);
@@ -678,6 +678,9 @@ int InputCTHD(Vt_Node& root, nhan_vien*& nv, Vt_Node vt, hd_Node* temp) {
 			if (cur_step != step) {
 				break;
 			}
+			if (!Saved) {
+				return 0;
+			}
 			if (cthd.donGia == 0) {
 				Notification("Don gia khong duoc rong!");
 				break;
@@ -690,6 +693,9 @@ int InputCTHD(Vt_Node& root, nhan_vien*& nv, Vt_Node vt, hd_Node* temp) {
 			TypeDoubleNumber(cthd.VAT, step, Saved, 1000000.0, 5);
 			if (cur_step != step) {
 				break;
+			}
+			if (!Saved) {
+				return 0;
 			}
 			if (cthd.VAT == 0) {
 				Notification("%VAT khong duoc rong!");
@@ -755,10 +761,10 @@ void DisplayMenuDSHD(nhan_vien* nv, hd_Node* temp, Vt_Node root, int CurHDPage, 
 void MenuManagerHD(dsNV& ds, Vt_Node& root) {
 	ShowCur(0);
 	system("cls");
-	int CurNVPage = 1;
 	int TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
-	int CurVtPage = 1;
+	int CurNVPage = (TotalNVPage != 0);
 	int TotalVtPage = (int)ceil((double)CountVtNode(root) / NumberPerPage);
+	int CurVtPage = (TotalVtPage != 0);
 	int CurHDPage = 1;
 	int TotalHDPage = 1;
 	int index = -1;
@@ -789,10 +795,8 @@ void MenuManagerHD(dsNV& ds, Vt_Node& root) {
 
 	//chon vat tu cho vao hoa don
 	while (true) {
-		CurHDPage = 1;
 		TotalHDPage = (int)ceil((double)hd->data.dscthd->n_cthd / NumberPerPage);
-		if (TotalHDPage == 0)
-			TotalHDPage = 1;
+		CurHDPage = (TotalHDPage != 0);
 		DisplayMenuDSHD(ds.dsnv[index], hd, root, CurHDPage, TotalHDPage);
 		int idx_func = PickFuncHD(root, hd, CurHDPage, TotalHDPage);
 		while (idx_func == 0) {
@@ -853,46 +857,37 @@ void DisplayPrintingHD(nhan_vien* nv, hd_Node* hd, Vt_Node root, int CurCTHDPage
 //---------- In hoa don -----------
 void CheckingHD(dsNV ds, Vt_Node root) {
 	system("cls");
-	dsNV ds_temp;
-
-	int idx = 0;
 	int pick = 0;
-	for (int i = 0; i < ds.n_nv; i++) {
-		if (ds.dsnv[i]->used == 1) {
-			ds_temp.dsnv[idx++] = ds.dsnv[i];
-		}
-	}
-	ds_temp.n_nv = idx;
 
-	int CurNVPage = 1;
-	int TotalNVPage = (int)ceil((double)ds_temp.n_nv / NumberPerPage);
+	int TotalNVPage = (int)ceil((double)ds.n_nv / NumberPerPage);
+	int CurNVPage = (TotalNVPage != 0);
 
 	//chon nhan vien de in hoa don
 	gotoxy(X_Title - 40, Y_Title);
 	cout << " Chon nhan vien in hoa don ";
 	Display(ContentNV, sizeof(ContentNV) / sizeof(string), false);
-	ShowListNVOnePage(ds_temp, 0, CurNVPage, TotalNVPage);
-	pick = PickItemNv(ds_temp, CurNVPage, TotalNVPage);
+	ShowListNVOnePage(ds, 0, CurNVPage, TotalNVPage);
+	pick = PickItemNv(ds, CurNVPage, TotalNVPage);
 	if (pick == -1) {
 		return;
 	}
 
-	int CurHDPage = 1;
-	int TotalHDPage = (int)ceil((double)ds_temp.dsnv[pick]->dshd->n_hd / NumberPerPage);
+	int TotalHDPage = (int)ceil((double)ds.dsnv[pick]->dshd->n_hd / NumberPerPage);
+	int CurHDPage = (TotalHDPage != 0);
 
 	//chon hoa don 
 	DrawTablePickHD();
-	ShowListHDOnePage(ds_temp.dsnv[pick]->dshd, 0, CurHDPage, TotalHDPage);
-	hd_Node* hd = PickHD(ds_temp.dsnv[pick]->dshd, CurHDPage, TotalHDPage);
+	ShowListHDOnePage(ds.dsnv[pick]->dshd, 0, CurHDPage, TotalHDPage);
+	hd_Node* hd = PickHD(ds.dsnv[pick]->dshd, CurHDPage, TotalHDPage);
 	if (hd == NULL) {
 		return;
 	}
 
 	//in hoa don
-	int CurCTHDPage = 1;
 	int TotalCTHDPage = (int)ceil((double)hd->data.dscthd->n_cthd/ NumberPerPage);
+	int CurCTHDPage = (TotalCTHDPage != 0);
 
-	DisplayPrintingHD(ds_temp.dsnv[pick], hd, root, CurCTHDPage, TotalCTHDPage);
+	DisplayPrintingHD(ds.dsnv[pick], hd, root, CurCTHDPage, TotalCTHDPage);
 
 	char signal;
 	while (true) {
@@ -962,29 +957,37 @@ void DisplayTK(string ct[], int sl, bool used) {
 		cout << char(219);
 	}
 }
- 
+
 //---------- in 1 thong tin -------------
 void ShowHDTK(hoa_donTK hdtk, int pos) {
+	cthd_Node*p = hdtk.dscthd->head;
+	double Value = 0;
+	while (p != NULL)
+	{
+		Value += ComputeValue(p->data.sl, p->data.donGia, p->data.VAT);
+		p = p->next;
+	}
 	gotoxy(xKeyContentTK[0] + 3, Y_Display + 4 + pos * 4);
-	cout << left << setw(15) << hdtk.maNV;
+	cout << left << setw(5) << hdtk.soHD;
 	gotoxy(xKeyContentTK[1] + 3, Y_Display + 4 + pos * 4);
 	cout << left << setw(25) << hdtk.ho;
 	gotoxy(xKeyContentTK[2] + 3, Y_Display + 4 + pos * 4);
-	cout << left << setw(25) << hdtk.ten;
+	cout << left << setw(10) << hdtk.ten;
 	gotoxy(xKeyContentTK[3] + 3, Y_Display + 4 + pos * 4);
-	cout << left << setw(5) << hdtk.soHD;
-	gotoxy(xKeyContentTK[4] + 3, Y_Display + 4 + pos * 4);
 	cout << left << setw(5) << StandardDate(hdtk.ngay_lapHD.ngay, hdtk.ngay_lapHD.thang, hdtk.ngay_lapHD.nam);
+	gotoxy(xKeyContentTK[4] + 3, Y_Display + 4 + pos * 4);
+	cout << fixed << setprecision(0) << addDot(Value);
 	gotoxy(xKeyContentTK[5] + 3, Y_Display + 4 + pos * 4);
 	(hdtk.loai == 'N') ? cout << "Nhap" : cout << "Xuat";
+	/*gotoxy(xKeyContentTK[6] + 3, Y_Display + 4 + pos * 4);
+	cout << fixed << setprecision(0) << addDot(Value);*/
 }
 
-//---------- in 1 trang -----------
-void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, int TotalHDPage, date ngay1, date ngay2) {
+void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, int TotalHDPage) {
 	int i = 0;
 
 	for (int j = i; j < NumberPerPage; j++) {
-		for (int k = 0; k < 3; k++) {
+		for (int k = 0; k < 6; k++) {
 			for (int l = xKeyContentTK[k] + 2; l < xKeyContentTK[k + 1] - 2; l++) {
 				gotoxy(l, Y_Display + 4 + j * 4);
 				cout << " ";
@@ -1000,7 +1003,7 @@ void ShowListHDTKOnePage(ds_hoa_donTK* HdTkNodeList, int index, int CurHDPage, i
 		ShowHDTK(hdtk_temp->data, i);
 		hdtk_temp = hdtk_temp->next;
 	}
-	RemoveExceedMemberTK(i, 6);
+	
 	gotoxy(X_Page + 6, Y_Page);
 	cout << "          ";
 	gotoxy(X_Page, Y_Page);
@@ -1039,10 +1042,10 @@ void ThongKeHD(dsNV ds) {
 	date ngay1, ngay2;
 	DisplayTK(ContentTK, sizeof(ContentTK) / sizeof(string), false);
 
-	gotoxy(40, 2);
+	gotoxy(50, 2);
 	cout << "BANG LIET KE CAC HOA DON TRONG KHOANG THOI GIAN";
 	gotoxy(46, 3);
-	cout << "Tu ngay ##/##/#### Den ngay ##/##/####";
+	cout << "Tu ngay     /     /       Den ngay     /     /       ";
 	gotoxy(55, 3);
 	ShowCur(1);
 
@@ -1055,45 +1058,41 @@ void ThongKeHD(dsNV ds) {
 	int CurX;
 	int step = 1;
 	int stepy = 0;
-	while (true)
-	{
 
+	ShowCur(1);
+	while (true) {
 		switch (step) {
 		case 1: {
 			TypeDate(ngay1.ngay, stepy, Saved, 32, -96, 0, 32);
 			if (!Saved) {
 				return;
 			}
-			if (ngay1.ngay == 0) {
-				break;
-			}
 			step++;
 			break; }
-		case 2: 
+		case 2:
 			CurX = wherex();
 			gotoxy(CurX + 1, 3);
-			TypeDate(ngay1.thang, stepy, Saved, 13, -93, 0, 13);
-			if (ngay1.thang == 0) {
-				break;
+			TypeDate(ngay1.thang, stepy, Saved, 13, -90, 0, 13);
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
-		case 3: { 
+		case 3: {
 			CurX = wherex();
 			gotoxy(CurX + 1, 3);
-			TypeDate(ngay1.nam, stepy, Saved, 2100, -90, 1000, 2100);
-			if (ngay1.nam == 0) {
-				break;
+			TypeDate(ngay1.nam, stepy, Saved, 2100, -84, 1000, 2100);
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
 		}
 		case 4: {
 			gotoxy(75, 3);
-			ShowCur(1);
-			TypeDate(ngay2.ngay, stepy, Saved, 32, -76, 0, 32);
-			if (ngay2.ngay == 0) {
-				break;
+			TypeDate(ngay2.ngay, stepy, Saved, 32, -69, 0, 32);
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
@@ -1101,9 +1100,9 @@ void ThongKeHD(dsNV ds) {
 		case 5: {
 			CurX = wherex();
 			gotoxy(CurX + 1, 3);
-			TypeDate(ngay2.thang, stepy, Saved, 13, -73, 0, 13);
-			if (ngay2.thang == 0) {
-				break;
+			TypeDate(ngay2.thang, stepy, Saved, 13, -63, 0, 13);
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
@@ -1111,26 +1110,28 @@ void ThongKeHD(dsNV ds) {
 		case 6:
 			CurX = wherex();
 			gotoxy(CurX + 1, 3);
-			TypeDate(ngay2.nam, stepy, Saved, 2100, -70, 1000, 2100);
-			if (ngay2.nam == 0) {
-				break;
+			TypeDate(ngay2.nam, stepy, Saved, 2100, -57, 1000, 2100);
+			if (!Saved) {
+				return;
 			}
+			step++;
 			break;
 		}
 		if (ngay1.ngay != 0 && ngay1.thang != 0 && ngay1.nam != 0 &&
 			ngay2.ngay != 0 && ngay2.thang != 0 && ngay2.nam != 0) {
 			break; // Exit the loop if all conditions are met
 		}
-		ShowCur(0);
+		
 	}
+	ShowCur(0);
 
 	for (int i = 0; i < ds.n_nv; i++) {
 		CheckNgayNV(ds, ngay1, ngay2, i, dstk);
 	}
 
-	int CurHDPage = 1;
 	int TotalHDPage = (int)ceil((double)dstk->n_hdtk / NumberPerPage);
-	ShowListHDTKOnePage(dstk, 0, CurHDPage, TotalHDPage, ngay1, ngay2);
+	int CurHDPage = (TotalHDPage != 0);
+	ShowListHDTKOnePage(dstk, 0, CurHDPage, TotalHDPage);
 
 	char signal;
 	while (true) {
@@ -1142,13 +1143,13 @@ void ThongKeHD(dsNV ds) {
 		case PAGE_UP:
 			if (CurHDPage > 1) {
 				CurHDPage--;
-				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage, ngay1, ngay2);
+				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage);
 			}
 			break;
 		case PAGE_DOWN:
 			if (CurHDPage < TotalHDPage) {
 				CurHDPage++;
-				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage, ngay1, ngay2);
+				ShowListHDTKOnePage(dstk, (CurHDPage - 1) * NumberPerPage, CurHDPage, TotalHDPage);
 			}
 			break;
 		case ESC:
@@ -1180,10 +1181,6 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 				}
 				break;
 			}
-			if (date1.ngay == 0) {
-				Notification("Ngay thong ke khong duoc rong");
-				break;
-			}
 			step++;
 			break;
 		case 2: {
@@ -1194,9 +1191,8 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 				step--;
 				break;
 			}
-			if (date1.thang == 0) {
-				Notification("Thang thong ke khong duoc rong");
-				break;
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
@@ -1209,9 +1205,8 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 				step--;
 				break;
 			}
-			if (date1.nam == 0) {
-				Notification("Nam thong ke khong duoc rong");
-				break;
+			if (!Saved) {
+				return;
 			}
 			if (!CheckValidDate(date1, step - 2)) {
 				step = 1;
@@ -1227,9 +1222,8 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 			if (cur_step != temp) {
 				break;
 			}
-			if (date2.ngay == 0) {
-				Notification("Ngay thong ke khong duoc rong");
-				break;
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
@@ -1242,9 +1236,8 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 				step--;
 				break;
 			}
-			if (date2.thang == 0) {
-				Notification("Thang thong ke khong duoc rong");
-				break;
+			if (!Saved) {
+				return;
 			}
 			step++;
 			break;
@@ -1257,9 +1250,8 @@ void InputDateForTopRevenue(date& date1, date& date2, bool& Saved) {
 				step--;
 				break;
 			}
-			if (date2.nam == 0) {
-				Notification("Nam thong ke khong duoc rong");
-				break;
+			if (!Saved) {
+				return;
 			}
 			if (!CheckValidDate(date2, step - 4)) {
 				step = 4;
@@ -1286,7 +1278,7 @@ void DisplayTopRevenue(dsNV ds, Vt_Node root) {
 		return;
 	}
 
-	cthd_with_val** TopRevenue = new cthd_with_val*[Max_itemVt];
+	cthd_with_val* TopRevenue = new cthd_with_val[Max_itemVt];
 	int idx = 0;
 	for (int i = 0; i < ds.n_nv; i++) {
 		hd_Node* hd_temp = ds.dsnv[i]->dshd->head;
@@ -1296,16 +1288,15 @@ void DisplayTopRevenue(dsNV ds, Vt_Node root) {
 				for (int k = 0; k < hd_temp->data.dscthd->n_cthd; k++) {
 					bool found = false;
 					for (int m = 0; m < idx; m++) {
-						if (TopRevenue[m]->cthd->maVT == cthd_temp->data.maVT) {
-							TopRevenue[m]->revenue += ComputeValue(cthd_temp->data.sl, cthd_temp->data.donGia, cthd_temp->data.VAT);
+						if (TopRevenue[m].cthd.maVT == cthd_temp->data.maVT) {
+							TopRevenue[m].revenue += ComputeValue(cthd_temp->data.sl, cthd_temp->data.donGia, cthd_temp->data.VAT);
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						TopRevenue[idx] = new cthd_with_val;
-						TopRevenue[idx]->cthd = &cthd_temp->data;
-						TopRevenue[idx]->revenue = ComputeValue(cthd_temp->data.sl, cthd_temp->data.donGia, cthd_temp->data.VAT);
+						TopRevenue[idx].cthd = cthd_temp->data;
+						TopRevenue[idx].revenue = ComputeValue(cthd_temp->data.sl, cthd_temp->data.donGia, cthd_temp->data.VAT);
 						idx++;
 					}
 					cthd_temp = cthd_temp->next;
@@ -1316,22 +1307,24 @@ void DisplayTopRevenue(dsNV ds, Vt_Node root) {
 	}
 	for (int i = 0; i < idx; i++) {
 		for (int j = i + 1; j < idx; j++) {
-			if (TopRevenue[i]->revenue < TopRevenue[j]->revenue) {
-				cthd_with_val* temp = TopRevenue[i];
+			if (TopRevenue[i].revenue < TopRevenue[j].revenue) {
+				cthd_with_val temp = TopRevenue[i];
 				TopRevenue[i] = TopRevenue[j];
 				TopRevenue[j] = temp;
 			}
 		}
 	}
 
+	
+
 	for (int i = 0; i < 10 && i < idx; i++) {
-		Vt_Node vt = FindVtNode(root, TopRevenue[i]->cthd->maVT);
+		Vt_Node vt = FindVtNode(root, TopRevenue[i].cthd.maVT);
 		gotoxy(xKeyContentNV[1] + 5, 12 + i * 4);
-		cout << TopRevenue[i]->cthd->maVT;
+		cout << TopRevenue[i].cthd.maVT;
 		gotoxy(xKeyContentNV[2] + 5, 12 + i * 4);
 		cout << vt->data.ten_vt;
 		gotoxy(xKeyContentNV[3] + 2, 12 + i * 4);
-		cout << addDot(TopRevenue[i]->revenue);
+		cout << addDot(TopRevenue[i].revenue);
 	}
 	
 	int signal = 0;
@@ -1339,9 +1332,6 @@ void DisplayTopRevenue(dsNV ds, Vt_Node root) {
 		while (_kbhit()) {
 			signal = _getch();
 			if (signal == ESC) {
-				for (int i = 0; i < idx; ++i) {
-					delete TopRevenue[i];
-				}
 				delete[] TopRevenue;
 				return;
 			}
@@ -1363,9 +1353,6 @@ void DisplayStatisticRevenue(dsNV ds) {
 		if (!Saved) {
 			return;
 		}
-		if (year == 0) {
-			Notification("Nam lap hoa don khong duoc rong");
-		}
 		else {
 			break;
 		}
@@ -1374,7 +1361,7 @@ void DisplayStatisticRevenue(dsNV ds) {
 	gotoxy(X_Display + 68, Y_Display - 3);
 	cout << year;
 
-	int TotalRevenueList[13] = {0};
+	double TotalRevenueList[13] = {0};
 	for (int i = 0; i < ds.n_nv; i++) {
 		hd_Node* hd_temp = ds.dsnv[i]->dshd->head;
 		for (int j = 0; j < ds.dsnv[i]->dshd->n_hd; j++) {
