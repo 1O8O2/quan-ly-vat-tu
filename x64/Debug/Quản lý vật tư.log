@@ -1,2 +1,9 @@
-﻿  UserInterface.cpp
+﻿  dsNhanVien.cpp
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(416,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(300,7): warning C4101: 'signal': unreferenced local variable
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(865,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(999,45): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(1321,45): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(1328,45): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\dsNhanVien.cpp(1411,64): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   Quản lý vật tư.vcxproj -> C:\Users\PC\Documents\Visual Studio 2022\Quan Ly Vat Tu\x64\Debug\Quản lý vật tư.exe

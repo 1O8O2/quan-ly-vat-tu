@@ -19,9 +19,9 @@ void TypeOnlyAWord(string& result, int& step, bool Edited, bool& Saved, int Limi
 			event = _getch();
 			if (event != 224 && event != 0) {
 				if (event == KEY_UP) {
-					if (!Edited) {
+					//if (!Edited) {
 						step--;
-					}
+					//}
 					return;
 				}
 				else if (isalpha(char(event))) {
@@ -76,9 +76,10 @@ void TypeWordAndSpace(string& result, int& step, bool Edited, bool& Saved, int L
 			event = _getch();
 			if (event != 224 && event != 0) {
 				if (event == KEY_UP) {
-					if (!Edited) {
+					//if (!Edited) {
 						step--;
-					}
+					//}
+					
 					return;
 				}
 				else if (isalpha(char(event))) {
@@ -137,9 +138,9 @@ void TypeWordNumberAndSpace(string& result, int& step, bool Edited, bool& Saved,
 			event = _getch();
 			if (event != 224 && event != 0) {
 				if (event == KEY_UP) {
-					if (!Edited) {
+					//if (!Edited) {
 						step--;
-					}
+					//}
 					return;
 				}
 				else if (isalpha(char(event)) || isdigit(char(event))) {
@@ -203,9 +204,9 @@ void TypeOnlyNumber(int& result, int& step, bool Edited, bool& Saved, int Limit_
 			event = _getch();
 			if (event != 224 && event != 0) {
 				if (event == KEY_UP) {
-					if (!Edited) {
+					//if (!Edited) {
 						step--;
-					}
+					//}
 					return;
 				}
 				else if (isdigit(char(event))) { 

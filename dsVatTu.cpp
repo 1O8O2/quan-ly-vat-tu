@@ -299,7 +299,7 @@ void ShowListVtOnePage(Vt_Node root, int StartIndex, int CurVtPage, int TotalVtP
 //---------- thay doi trang in vat tu ----------
 void ChangeVtManagerPage(Vt_Node root, int CurVtPage, int TotalVtPage) {
 	gotoxy(X_Title, Y_Title);
-	cout << " Quan li nhan vien ";
+	cout << " Quan li vat tu ";
 	ShowListVtOnePage(root, (CurVtPage - 1) * NumberPerPage, CurVtPage, TotalVtPage);
 }
 
@@ -520,10 +520,22 @@ void InputVt(Vt_Node& root, bool Edited, bool Deleted, int& CurVtPage, int& Tota
 			if (!Saved) {
 				RemoveFormComplete(4);
 				return;
+			}if (Edited)
+			{
+				if (cur_step != step) {
+					step = 2;
+					break;
+				}
 			}
-			if (cur_step != step) {
+			else
+			{
+				if (cur_step != step) {
+					break;
+				}
+			}
+			/*if (cur_step != step) {
 				break;
-			}
+			}*/
 			step++;
 			break;
 		case 3: //nhap don vi tinh
